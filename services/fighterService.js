@@ -15,7 +15,6 @@ class FighterService {
     }
 
     create(data) {
-        console.log(this.search({name: data.name}))
         if(this.search({name: data.name.toLowerCase()})) {
             throw Error('fighter already exists')
         }

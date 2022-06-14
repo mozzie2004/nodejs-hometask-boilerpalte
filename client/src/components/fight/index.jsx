@@ -6,12 +6,16 @@ import Fighter from '../fighter';
 import { Button } from '@material-ui/core';
 
 import './fight.css'
+import Arena from '../arena';
+import { fight } from '../../utils/fight';
+import { addFightToHistory } from '../../services/domainRequest/fightRequest';
 
 class Fight extends React.Component {
     state = {
         fighters: [],
         fighter1: null,
-        fighter2: null
+        fighter2: null,
+        fighting: false,
     };
 
     async componentDidMount() {
@@ -22,7 +26,19 @@ class Fight extends React.Component {
     }
 
     onFightStart = () => {
-        
+        if(this.state.fighter1 && this.state.fighter2) {
+            this.setState({fighting: true})
+            fight(this.state.fighter1, this.state.fighter2)
+            .then(async (fightData) => {
+                this.setState({fighting: false})
+                setTimeout(() => alert(`Congratulations ${fightData.winner}`), 500);
+                await addFightToHistory({
+                    fighter1: this.state.fighter1.id,
+                    fighter2: this.state.fighter2.id,
+                    log: fightData.log
+                })
+            })
+        }
     }
 
     onCreate = (fighter) => {
@@ -56,7 +72,7 @@ class Fight extends React.Component {
     }
 
     render() {
-        const  { fighter1, fighter2 } = this.state;
+        const  { fighter1, fighter2, fighting } = this.state;
         return (
             <div id="wrapper">
                 <NewFighter onCreated={this.onCreate} />
@@ -67,6 +83,7 @@ class Fight extends React.Component {
                     </div>
                     <Fighter selectedFighter={fighter2} onFighterSelect={this.onFighter2Select} fightersList={this.getFighter2List() || []} />
                 </div>
+                <Arena show={fighting} firstFigter={fighter1} secondFighter={fighter2} />
             </div>
         );
     }

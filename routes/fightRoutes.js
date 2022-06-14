@@ -6,6 +6,14 @@ const { responseMiddleware } = require('../middlewares/response.middleware');
 
 const router = Router();
 
-// OPTIONAL TODO: Implement route controller for fights
+router.post('/', (req, res) => {
+  const fight = FightService.addFight(req.body);
+  res.status(200).json(fight)
+})
+
+router.get('/', (req, res) => {
+  const fights = FightService.getAll();
+  res.status(200).json(fights)
+})
 
 module.exports = router;

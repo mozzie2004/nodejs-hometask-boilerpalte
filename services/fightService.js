@@ -1,7 +1,12 @@
 const { FightRepository } = require('../repositories/fightRepository');
 
 class FightersService {
-    // OPTIONAL TODO: Implement methods to work with fights
+    addFight(data) {
+        return FightRepository.create(data)
+    }
+    getAll() {
+        return FightRepository.getAll()
+    }
 }
 
 module.exports = new FightersService();
